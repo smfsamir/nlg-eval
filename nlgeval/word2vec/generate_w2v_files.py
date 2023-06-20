@@ -1,21 +1,14 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 import os
-
-try:
-    from gensim.models import KeyedVectors
-except ImportError:
-    from gensim.models import Word2Vec as KeyedVectors
-
-import six
-from nlgeval.word2vec.glove2word2vec import glove2word2vec
+import gensim
+from gensim.scripts.glove2word2vec import glove2word2vec
 
 
 def txt2bin(filename):
-    m = KeyedVectors.load_word2vec_format(filename)
-    m.vocab[next(six.iterkeys(m.vocab))].sample_int = 1
-    m.save(filename.replace('txt', 'bin'), separately=None)
-    KeyedVectors.load(filename.replace('txt', 'bin'), mmap='r')
+    m = gensim.models.KeyedVectors.load_word2vec_format(filename)
+    m.save_word2vec_format(filename.replace('txt', 'bin'), binary=True)
+    gensim.models.KeyedVectors.load(filename.replace('txt', 'bin'), mmap='r')
 
 
 def generate(path):
